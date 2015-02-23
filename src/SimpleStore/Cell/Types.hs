@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings, NoImplicitPrelude, GeneralizedNewtypeDeriving, DeriveGeneric #-}
 {-# LANGUAGE RecordWildCards, TypeFamilies,DeriveDataTypeable,ScopedTypeVariables #-}
+{-# LANGUAGE ConstraintKinds #-}
 
 {-| 
 
@@ -19,6 +20,7 @@ module SimpleStore.Cell.Types (StoreCellError(..)
                             , CellCore (..)
                             , FileKey (..)
                             , SimpleCellState (..)
+                            , Cell (..)
                             ) where
 
 
@@ -143,3 +145,55 @@ class SimpleCellState st where
   type SimpleCellDateTime st
   simpleCellKey :: CellKey (SimpleCellKey st) (SimpleCellSrc st) (SimpleCellDst st) (SimpleCellDateTime st) st
 
+
+type CellConstraint k src dst tm st = 
+  (Ord k  , Hashable k ,
+   Ord src, Hashable src,
+   Ord dst, Hashable dst,
+   Ord tm , Hashable tm ,
+   SimpleCellState st,
+   k ~ SimpleCellKey st,
+   src ~ SimpleCellSrc st,
+   dst ~ SimpleCellDst st,
+   tm ~ SimpleCellDateTime st,
+   Serialize st)
+
+-- | Interface to a Cell
+class Cell c where
+  type CellKeyType          c
+  type CellSrcType          c
+  type CellDstType          c
+  type CellDateTimeType     c
+  type CellLiveStateType    c
+  type CellDormantStateType c
+  insertStore           :: (CellKeyType c ~ k, CellSrcType c ~ src,
+                            CellDstType c ~ dst, CellDateTimeType c ~ tm,
+                            CellLiveStateType c ~ st,
+                            CellConstraint k src dst tm st) =>
+                           c -> st -> IO (SimpleStore st) 
+  getStore              :: (CellKeyType c ~ k, CellSrcType c ~ src,
+                            CellDstType c ~ dst, CellDateTimeType c ~ tm,
+                            CellLiveStateType c ~ st,
+                            CellConstraint k src dst tm st) =>
+                           c -> st -> IO (Maybe (SimpleStore st))
+  updateStore           :: (CellKeyType c ~ k, CellSrcType c ~ src,
+                            CellDstType c ~ dst, CellDateTimeType c ~ tm,
+                            CellLiveStateType c ~ st,
+                            CellConstraint k src dst tm st) =>
+                           c -> SimpleStore st -> st -> IO ()
+  deleteStore           :: (CellKeyType c ~ k, CellSrcType c ~ src,
+                            CellDstType c ~ dst, CellDateTimeType c ~ tm,
+                            CellLiveStateType c ~ st,
+                            CellConstraint k src dst tm st) =>
+                           c -> st -> IO ()
+  foldrStoreWithKey     :: (CellKeyType c ~ k, CellSrcType c ~ src,
+                            CellDstType c ~ dst, CellDateTimeType c ~ tm,
+                            CellLiveStateType c ~ stlive,
+                            CellConstraint k src dst tm stlive) =>
+                           c -> (CellKey k src dst tm stlive -> DirectedKeyRaw k src dst tm -> stlive -> IO b -> IO b) -> IO b -> IO b
+  traverseStoreWithKey_ :: (CellKeyType c ~ k, CellSrcType c ~ src,
+                            CellDstType c ~ dst, CellDateTimeType c ~ tm,
+                            CellLiveStateType c ~ stlive,
+                            CellConstraint k src dst tm stlive) =>
+                           c -> (CellKey k src dst tm stlive -> DirectedKeyRaw k src dst tm -> stlive -> IO ()) -> IO ()
+  
