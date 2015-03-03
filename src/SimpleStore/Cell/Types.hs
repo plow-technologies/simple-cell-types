@@ -102,7 +102,7 @@ instance Serialize FileKey where
 
 data CellCore  k src dst tm tvlive stdormant = CellCore { 
       ccLive     ::  ((M.Map (DirectedKeyRaw  k src dst tm) tvlive ))
-      ,ccDormant ::  (TVar stdormant)
+      ,ccDormant ::  stdormant
     }
 
 
@@ -166,7 +166,7 @@ class Cell c where
   type CellDormantStateType c
   insertStore           :: (CellLiveStateType c ~ st,
                             CellStateConstraint k src dst tm st) =>
-                           c -> st -> IO (SimpleStore st) 
+                           c -> st -> IO (Either StoreError (SimpleStore st))
   getStore              :: (CellLiveStateType c ~ st,
                             CellStateConstraint k src dst tm st) =>
                            c -> st -> IO (Maybe (SimpleStore st))

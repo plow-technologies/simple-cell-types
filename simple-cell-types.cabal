@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                simple-cell-types
-version:             0.7.0
+version:             0.9.0
 synopsis:            Types for the simple-cell library
 -- description:         
 license:             MIT
@@ -25,7 +25,7 @@ library
                        directed-keys >=0.3 && <0.4, 
                        stm-containers >=0.2 && <0.3, 
                        containers >=0.5 && <0.6, 
-                       simple-store >=0.1 && <0.2, 
+                       simple-store >=0.2 && <0.3, 
                        aeson >=0.8 && <0.9, 
                        aeson-serialize >=0.0 && <0.1, 
                        cereal >=0.4 && <0.5
