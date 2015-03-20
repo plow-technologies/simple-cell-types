@@ -176,12 +176,6 @@ class Cell c where
   deleteStore           :: (CellLiveStateType c ~ st,
                             CellStateConstraint k src dst tm st) =>
                            c -> st -> IO ()
-  foldrStoreWithKey     :: (CellLiveStateType c ~ stlive,
-                            CellStateConstraint k src dst tm stlive) =>
-                           c -> (CellKey k src dst tm stlive -> DirectedKeyRaw k src dst tm -> stlive -> IO b -> IO b) -> IO b -> IO b
-  traverseStoreWithKey_ :: (CellLiveStateType c ~ stlive,
-                            CellStateConstraint k src dst tm stlive) =>
-                           c -> (CellKey k src dst tm stlive -> DirectedKeyRaw k src dst tm -> stlive -> IO ()) -> IO ()
-  
+ 
 type CellConstraint k src dst tm st c = 
   (Cell c, CellLiveStateType c ~ st, CellStateConstraint k src dst tm st)
