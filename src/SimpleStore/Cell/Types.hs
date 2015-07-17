@@ -32,7 +32,7 @@ import Filesystem.Path.CurrentOS hiding (root)
 
 -- Controls
 
-import CorePrelude hiding (try,catch, finally)
+import CorePrelude hiding (try,catch, finally,FilePath)
 import Control.Concurrent.STM
 
 
