@@ -15,10 +15,10 @@ build-type:          Simple
 -- extra-source-files:  
 cabal-version:       >=1.10
 
-library
+libraryc
   exposed-modules:     SimpleStore.Cell.Types
   -- other-modules:       
-  build-depends:        base 
+  build-depends:        base >= 4 && < 5
                       , system-filepath 
                       , basic-prelude 
                       , stm 
