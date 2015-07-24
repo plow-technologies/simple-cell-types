@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                simple-cell-types
-version:             0.10.1
+version:             0.11.0
 synopsis:            Types for the simple-cell library
 -- description:         
 license:             MIT
